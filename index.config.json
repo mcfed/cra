@@ -1,0 +1,28 @@
+{
+    "questions": [
+        {
+            "type": "input",
+            "name": "projectName",
+            "message": "请为你想要创建的项目命名",
+            "default": "test"
+        }, {
+            "type": "list",
+            "name": "questionType",
+            "message": "请选择项目问题的类型",
+            "default": "A",
+            "choices": [
+                {
+                    "value": "问答模式"
+                },
+                {
+                    "value": "列表选择模式"
+                }
+            ]
+        }, {
+            "type": "confirm",
+            "name": "isContinue",
+            "message": "还要继续添加问题吗？",
+            "default": false
+        }
+    ]
+}
