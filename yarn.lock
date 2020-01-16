@@ -82,6 +82,11 @@ commander@^4.1.0:
   resolved "http://192.168.200.178:4873/commander/-/commander-4.1.0.tgz#545983a0603fe425bc672d66c9e3c89c42121a83"
   integrity sha512-NIQrwvv9V39FHgGFm36+U9SMQzbiHvU79k+iADraJTpmrFFfx7Ds0IvDoAdZsDrknlkRk14OYoWXb57uTh7/sw==
 
+compare-versions@^3.5.1:
+  version "3.5.1"
+  resolved "http://192.168.200.178:4873/compare-versions/-/compare-versions-3.5.1.tgz#26e1f5cf0d48a77eced5046b9f67b6b61075a393"
+  integrity sha1-JuH1zw1Ip37O1QRrn2e2thB1o5M=
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "http://192.168.200.178:4873/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"

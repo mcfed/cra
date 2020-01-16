@@ -1,6 +1,5 @@
 var inquirer = require('inquirer');
 var prompt = inquirer.createPromptModule();
-const config = require('./index.config.json')
 
 let q = {
     "questions": [

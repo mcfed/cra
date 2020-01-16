@@ -39,7 +39,7 @@ let q = {
 
 async function main(questions) {
     await prompt(questions).then(async (res) => {
-        console.log('==res===', JSON.stringify(res, null, 2))
+        // console.log('==res===', JSON.stringify(res, null, 2))
         console.log('开始创建项目:', res.projectName)
         const time = Date.now()
         try {
@@ -56,5 +56,5 @@ async function main(questions) {
 main(q.questions).then(res => {
     // console.log('==res===', JSON.stringify(result, null, 2))
 }).catch(err => {
-    console.error('你错了！！！', err)
+    console.error('创建项目出错：', err)
 });

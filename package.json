@@ -1,6 +1,6 @@
 {
   "name": "cra",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "description": "",
   "main": "create.js",
   "scripts": {
@@ -10,12 +10,15 @@
     "create.js",
     "package.json",
     "createProject.js",
-    "bin"
+    "bin",
+    "README.md",
+    "install.js"
   ],
   "author": "lixiang",
   "license": "ISC",
   "dependencies": {
     "commander": "^4.1.0",
+    "compare-versions": "^3.5.1",
     "inquirer": "^7.0.3",
     "shelljs": "^0.8.3"
   },

@@ -9,7 +9,12 @@ package = JSON.parse(package)
 
 program
   .version(package.version)
-  .action(function (commander) {
-    require('../create')
+  .option('-c, --change-to-available-version', '安装可利用的create-react-app版本')
+  .action(async function (commander) {
+    if (commander.changeToAvailableVersion) {
+      require('../install')
+    } else {
+      require('../create')
+    }
   })
   .parse(process.argv)
