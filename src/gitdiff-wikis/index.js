@@ -101,7 +101,13 @@ class File {
         return fs.existsSync(this.getPath(path))
     }
     existDir(dir) {
-        return fs.existsSync(dir)
+         if (!fs.existsSync(dir)) {
+            return false
+         }
+         if (!fs.lstatSync(dir).isDirectory()) {
+            return false
+         }
+         return true
     }
     getPath(filePath, dir) {
         return path.join(dir || this.dir, filePath)
@@ -134,8 +140,19 @@ class File {
     getDirs(dir) {
         return fs.readdirSync(dir || this.dir)
     }
+    getFilesByDir(dir, filesList = []) {
+        const files = this.getDirs(dir);
+        files.forEach((item) => {
+            const fullPath = this.getPath(item, dir);
+            if (this.existDir(fullPath)) {      
+                this.getFilesByDir(this.getPath(item, dir), filesList);  //递归读取文件
+            } else {                
+                filesList.push(fullPath);                     
+            }        
+        });
+        return filesList;
+    }
 }
-
 class Utils {
     static getProjectName(projectname) {
         if (typeof projectname === 'string') {
@@ -149,6 +166,21 @@ class Utils {
     }
     static removeDirsFileType(dirs, type='.md') {
         return dirs.map(name => name.replace(type, ''))
+    }
+    static getCommitIds(str) {
+        return str.split('\n').map(e => {
+            const arr = e.split('--')
+            return { 
+                updateTime: moment(new Date(arr[0].trim())).format('YYYY-MM-DD LTS'),
+                user: arr[1].trim(),
+                commitId: arr[2].trim()
+            }
+        }).filter(e => e)
+    }
+    static deleteListPrefix(list, prefix) {
+        return list.map(item => {
+            return item.replace(prefix, '').replace(/^\//, '')
+        })
     }
 }
 
@@ -168,19 +200,7 @@ class Shell {
     static goto(path) {
         return this.exec(`cd ${path}`)
     }
-
-    static getCommitIds(str) {
-        return str.split('\n').map(e => {
-            const arr = e.split('--')
-            return { 
-                updateTime: moment(new Date(arr[0].trim())).format('YYYY-MM-DD LTS'),
-                user: arr[1].trim(),
-                commitId: arr[2].trim()
-            }
-        }).filter(e => e)
-    }
 }
-
 
 async function main(git, inquirer, fileServer, Project) {
     const tmpProjectPath = './.projects'
@@ -241,6 +261,7 @@ async function main(git, inquirer, fileServer, Project) {
     
         // 项目准备（项目拉取）
         projectPath = git.clone(projectServer.gitWikiGitlabUrl(), tmpProjectPath)
+        projectPath = fileServer.getPath(projectPath, Pwd)
 
         // 记录配置
         if (!list.find(e => e.value === result.projectName)) {
@@ -249,20 +270,24 @@ async function main(git, inquirer, fileServer, Project) {
         }
     
         // 获取文档名称列表《之后单选》
-        const dirs = fileServer.getDirs(projectPath)
-        const markdownDirs = dirs.filter(dir => /\.md$/.test(dir))
-        const mdNams = Utils.removeDirsFileType(markdownDirs)
-        if (!mdNams.length) {
+        let markdownFiles = []
+        fileServer.getFilesByDir(projectPath, markdownFiles)
+        markdownFiles = Utils.deleteListPrefix(markdownFiles, projectPath)
+
+        markdownFiles = markdownFiles.filter(dir => /\.md$/.test(dir))
+        const mdNames = Utils.removeDirsFileType(markdownFiles)
+        if (!mdNames.length) {
             throw new Error('WIKI文档不存在')
         }
+        console.log('mdNames:', mdNames)
         inquirer.clear()
         inquirer.addQuestion({
             type: "list",
             name: "fileName",
             message: "请选择你的WIKI文档名称？",
-            choices: mdNams,
+            choices: mdNames,
             when: function () {
-                return !!mdNams.length
+                return !!mdNames.length
             }
         })
         res = await inquirer.prompt()
@@ -271,9 +296,9 @@ async function main(git, inquirer, fileServer, Project) {
         }
     
         // 获取选择文档提交列表《之后选择》
-        const filePath = path.join(Pwd, projectPath, `${result.fileName}.md`)
+        const filePath = fileServer.getPath(`${result.fileName}.md`, projectPath)
         let { stdout: commitHistorys } = git.getFileCommitHistorys(filePath, projectPath)
-        commitHistorys = Shell.getCommitIds(commitHistorys)
+        commitHistorys = Utils.getCommitIds(commitHistorys)
         const options = { filePath, projectPath }
         if (commitHistorys.length <= 1) {
             throw new Error('提交次数不足，无法比较')
@@ -291,48 +316,18 @@ async function main(git, inquirer, fileServer, Project) {
         }
         fileServer.set(diffName, diffString)
         Shell.exec(`open ${fileServer.getPath(diffName)}`, 'Open File Fail')
-
-
-        //进行选择
-        // inquirer.clear()
-        // inquirer.addQuestion({
-        //     type: "number",
-        //     name: "commitCount",
-        //     message: "请选择比较当前版本之前第几次提交版本？",
-        //     default: 1
-        // })
-        // res = await inquirer.prompt()
-        // if (!(res.commitCount >= 1 && res.commitCount <= 100)){
-        //     throw new Error('请输入正确的值')
-        // }
-        // result.commitCount = Math.round(res.commitCount)
-
-        // 进行比较
-        // const commitId = commitHistorys[result.commitCount]
-        // if (!commitId) {
-        //     throw new Error('选择提交版本错误')
-        // }
-        
-        // res = git.diff(commitHistorys[0], commitId, { 
-        //     filePath, 
-        //     projectPath,
-        //     customCmd: ``
-        // })
     } catch (error) {
         throw error
     } finally {
         // 删除临时数据
-        // console.info('删除临时项目：', projectPath)
         git.remove(projectPath)
     }
 }
 
 main(new Git(), new Inquirer(), new File(), Project).then(res => {
-    // console.log('==res===', JSON.stringify(result, null, 2))
 }).catch(err => {
     console.error('操作出错：', err)
 });
-
 
 process.on('uncaughtException', function (err) {
     //打印出错误
@@ -343,6 +338,5 @@ process.on('uncaughtException', function (err) {
     const git = new Git()
 
     // 删除临时数据
-    // console.info('删除临时项目：', projectPath)
     git.remove(projectPath)
 });
