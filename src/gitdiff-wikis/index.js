@@ -29,16 +29,16 @@ class Git {
     }
     getFileCommitHistorys(filePath, dir) {
         const errorMessage = 'fetch file commit history failed'
-        let cmd = ` git log -10 --pretty=format:"%cd -- %an -- %H" ${filePath}`
-        if (dir) { cmd = `cd ${dir} && ` + cmd }
-
+        let cmd = ` git log -10 --pretty=format:"%cd -- %an -- %H" "${filePath}"`
+        if (dir) { cmd = `cd "${dir}" && ` + cmd }
+        console.log(cmd)
         return Shell.exec(cmd, errorMessage)
     }
     diff(commitId, commitIdDiff, { filePath, projectPath, customCmd } = {}) {
         const errorMessage = 'diff commit fail'
         let cmd = `git diff ${commitIdDiff} ${commitId}`
-        if (projectPath) { cmd = `cd ${projectPath} && ` + cmd }
-        if (filePath) { cmd += ` -- ${filePath}` }
+        if (projectPath) { cmd = `cd "${projectPath}" && ` + cmd }
+        if (filePath) { cmd += ` -- "${filePath}"` }
         if (customCmd) { cmd += ` && ${customCmd} ` }
         return Shell.exec(cmd, errorMessage)
     }
