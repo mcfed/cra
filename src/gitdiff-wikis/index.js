@@ -3,9 +3,9 @@ const shell = require('shelljs');
 const fs = require('fs')
 const path = require('path')
 const moment = require('moment')
-
+const url = require('url')
 const config = {
-    gitlab: 'http://git.mchz.com.cn/'
+    gitlab: 'http://git.mchz.com.cn'
 }
 const HomePath = process.env.HOME
 const Pwd = process.env.PWD
@@ -47,23 +47,26 @@ class Git {
 // Project
 class Project {
     constructor(name, git) {
-        if (name.indexOf(config.gitlab) !== -1) {
-            name = formatName(name)
-        }
-        this.name = name
         this.git = git
+        this.gitlabBase = config.gitlab
+        if (/^https?:\/\//.test(name) === -1) {
+            name = `${this.gitlabBase}/${this.formatName(name)}`
+        }
+        const urlParser = url.parse(name)
+        this.gitlabBase = `${urlParser.protocol}//${urlParser.host}`
+        this.name = this.formatName(urlParser.path)
     }
     getUrl() {
-        return `${config.gitlab}${this.name}`
+        return `${this.gitlabBase}/${this.name}`
     }
     gitGitlabUrl() {
-        return `${config.gitlab}${this.name}.git`
+        return `${this.gitlabBase}/${this.name}.git`
     }
     gitWikiGitlabUrl() {
-        return `${config.gitlab}${this.name}.wiki.git`
+        return `${this.gitlabBase}/${this.name}.wiki.git`
     }
     formatName(name) {
-        return name.replace(config.gitlab, '')
+        return name.replace(this.gitlabBase, '').replace(/^\//, '').replace(/\/$/, '')
     }
 }
 
@@ -153,6 +156,7 @@ class File {
         return filesList;
     }
 }
+
 class Utils {
     static getProjectName(projectname) {
         if (typeof projectname === 'string') {
@@ -188,7 +192,7 @@ class Shell {
     static exec(cmd, errMessage='FAIL') {
         const result = shell.exec(cmd)
         if (result.code !== 0) {
-            throw new Error(errMessage)
+            throw new Error(`${errMessage} \n${JSON.stringify(result, null, 2)} \n`)
         }
         return result
     }
@@ -206,7 +210,6 @@ async function main(git, inquirer, fileServer, Project) {
     const tmpProjectPath = './.projects'
     projectPath = git.getTmpDir(tmpProjectPath)
     try {
-
         const result = {}
         const projectFileName = 'projectlist.json'
         const diffName = 'diff.md'
