@@ -31,7 +31,6 @@ class Git {
         const errorMessage = 'fetch file commit history failed'
         let cmd = ` git log -10 --pretty=format:"%cd -- %an -- %H" "${filePath}"`
         if (dir) { cmd = `cd "${dir}" && ` + cmd }
-        console.log(cmd)
         return Shell.exec(cmd, errorMessage)
     }
     diff(commitId, commitIdDiff, { filePath, projectPath, customCmd } = {}) {
@@ -49,7 +48,7 @@ class Project {
     constructor(name, git) {
         this.git = git
         this.gitlabBase = config.gitlab
-        if (/^https?:\/\//.test(name) === -1) {
+        if (!/^https?:\/\//.test(name)) {
             name = `${this.gitlabBase}/${this.formatName(name)}`
         }
         const urlParser = url.parse(name)
@@ -282,7 +281,6 @@ async function main(git, inquirer, fileServer, Project) {
         if (!mdNames.length) {
             throw new Error('WIKI文档不存在')
         }
-        console.log('mdNames:', mdNames)
         inquirer.clear()
         inquirer.addQuestion({
             type: "list",
