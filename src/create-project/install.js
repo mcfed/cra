@@ -1,6 +1,6 @@
 const shell = require('shelljs');
 
-const shellScripts = 'npm install create-react-app@3.2.0 -g'
+const shellScripts = 'npm install create-react-app -g'
 
 async function main() {
     if (!shell.which('npm')) {

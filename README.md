@@ -1,20 +1,19 @@
-# cra
+# crat
 
-全局安装 `cra`
+全局安装 `crat`
 
 ```js
- npm install cra -g
+ npm install crat -g
 ```
 
 全局安装 `create-react-app` 
-要求：版本小于 `3.2.0`
 
 ```js
-npm install create-react-app@3.2.0
+npm install create-react-app
 ```
 
-运行cra
+运行crat
 
 ```js
-cra
+crat
 ```

@@ -1,6 +1,9 @@
-var inquirer = require('inquirer');
-const createProject = require('./createProject')
+const inquirer = require('inquirer')
+const path = require('path')
+const { checkVision, createProject, installProject, rmProject } = require('./createProject')
+const renderProject = require('./renderProject.js')
 var prompt = inquirer.createPromptModule();
+const Pwd = process.env.PWD
 
 let q = {
     "questions": [
@@ -18,9 +21,9 @@ let q = {
         },
         {
             "type": "input",
-            "name": "scriptName",
-            "message": "是否配置其他指定的--scripts-version",
-            "default": "@mcf/react-scripts"
+            "name": "templatePath",
+            "message": "指定模版路径--template",
+            "default": "cra-template-crat"
         },
         {
             "type": "confirm",
@@ -36,25 +39,39 @@ let q = {
         }
     ]
 }
+function main(questions) {
+    new Promise(async (resolve, reject) => {
+        //  验证create-react-app版本
+        checkVision()
 
-async function main(questions) {
-    await prompt(questions).then(async (res) => {
-        // console.log('==res===', JSON.stringify(res, null, 2))
-        console.log('开始创建项目:', res.projectName)
+        // 交互
+        const res = await prompt(questions)
+        console.log('开始创建项目:', res.projectName, res.templatePath)
         const time = Date.now()
         try {
             // 根据结果创建项目
-            await createProject(res)
+            createProject(res)
+
+            // 安装项目
+            console.log('创建项目完成，开始安装模版:')
+            await installProject(res)
+
+            // 渲染项目安装模版
+            await renderProject(path.join(Pwd, res.projectName))
             console.log('耗费时间：', `${Date.now() - time} ms`)
+            resolve()
         } catch (error) {
             console.log('项目创建失败:', error)
+            reject(error)
         }
-
+    }).catch(err => {
+        rmProject(res.projectName)
+        throw new Error(err)
     })
 }
-
-main(q.questions).then(res => {
-    // console.log('==res===', JSON.stringify(result, null, 2))
-}).catch(err => {
+try {
+    main(q.questions)
+} catch(err) {
     console.error('创建项目出错：', err)
-});
+}
+
