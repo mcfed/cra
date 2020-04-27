@@ -8,16 +8,19 @@ const compareVersions = require('compare-versions');
 const chalk = require('chalk');
 const unpack = require('tar-pack').unpack;
 const spawn = require('cross-spawn');
+const cratPackage = require('../../package.json')
 const HomePath = process.env.HOME
 const Pwd = process.env.PWD
 const templateJson = 'template.json'
+const cratVersion = cratPackage.version
+const creatReactAppCommandPath = path.join(__dirname, '../../node_modules/.bin/create-react-app')
 
 function checkVision() {
-    if (!shell.which('create-react-app')) {
-        shell.echo('Sorry, this script requires create-react-app');
-        shell.exit(1);
-    }
-    if (compareVersions(shell.exec('create-react-app -V').stdout.trim(), '3.2.0') !== 1 ) {
+    // if (!shell.which('create-react-app')) {
+    //     shell.echo('Sorry, this script requires create-react-app');
+    //     shell.exit(1);
+    // }
+    if (compareVersions(shell.exec(`${creatReactAppCommandPath} -V`).stdout.trim(), '3.2.0') !== 1 ) {
         // < 3.2.0
         shell.echo('Sorry, this version of create-react-app need more than 3.2.0');
         shell.exit(1);
@@ -25,7 +28,7 @@ function checkVision() {
 }
 
 function createProject({ projectName, templatePath, useNpm, usePnp  }) {
-    let shellScripts = `create-react-app ${projectName} --template ${templatePath} `
+    let shellScripts = `${creatReactAppCommandPath} ${projectName} --template ${templatePath} `
 
      // Run external tool synchronously
     if (useNpm || usePnp) {
@@ -73,7 +76,8 @@ async function installProject({ projectName, templatePath, useNpm, usePnp  }) {
 
     // 因为package.json中的一些字段有黑名单，所以想要生成这些字段要后期处理
     if (package[tmpDevDependencies] && typeof package[tmpDevDependencies] === 'object' && !Array.isArray(package[tmpDevDependencies])) {
-        projectPackage[devDependencies] = package[tmpDevDependencies]
+        projectPackage[devDependencies] = package[tmpDevDependencies] || {}
+        projectPackage[devDependencies][cratPackage.name] = cratVersion
         delete projectPackage[tmpDevDependencies]
     }
 
