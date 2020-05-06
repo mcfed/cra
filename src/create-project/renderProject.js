@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const Mustache = require('mustache');
 const inquirer = require('inquirer');
+const chalk = require('chalk');
 const prompt = inquirer.createPromptModule();
 const HomePath = process.env.HOME
 const Pwd = process.env.PWD
@@ -53,9 +54,9 @@ async function creatModal(projectPath) {
   console.log('.crarc path is ', crarc.path)
 
   let tpl = require(crarc.path)
-  console.log('replace files ...', JSON.stringify(tpl, 0, 2))
+  // console.log('replace files ...', JSON.stringify(tpl, 0, 2))
   await allRead(projectPath, tpl)
-  console.log(`模块${tpl.namespace}创建成功 ${projectPath}`)
+  console.log(chalk.green(`模块${tpl.namespace}创建成功`), projectPath)
 }
 
 // 使用相同策略获取获取文件

@@ -1,5 +1,6 @@
 const inquirer = require('inquirer')
 const path = require('path')
+const chalk = require('chalk');
 const { checkVision, createProject, installProject, rmProject } = require('./createProject')
 const renderProject = require('./renderProject.js')
 var prompt = inquirer.createPromptModule();
@@ -46,22 +47,23 @@ function main(questions) {
 
         // 交互
         const res = await prompt(questions)
-        console.log('开始创建项目:', res.projectName, res.templatePath)
+        console.log(chalk.green(`开始创建项目: ${res.projectName}, ${res.templatePath}`))
         const time = Date.now()
         try {
             // 根据结果创建项目
             createProject(res)
 
             // 安装项目
-            console.log('创建项目完成，开始安装模版:')
+            console.log(chalk.green('创建项目完成，开始安装模版:'))
             await installProject(res)
 
             // 渲染项目安装模版
             await renderProject(path.join(Pwd, res.projectName))
-            console.log('耗费时间：', `${Date.now() - time} ms`)
+            console.log(chalk.blue(`耗费时间：${Date.now() - time} ms`))
+            
             resolve()
         } catch (error) {
-            console.log('项目创建失败:', error)
+            console.log(chalk.red(`项目创建失败: ${error.stack}`))
             reject(error)
         }
     }).catch(err => {

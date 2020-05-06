@@ -56,7 +56,10 @@ async function installTemplate(projectName, templatePath) {
 async function installProject({ projectName, templatePath, useNpm, usePnp  }) {
 
     // 安装可选安装包---模版包
-    const { templatePath: templateDirPath, templateJsonPath  } = await installTemplate(projectName, templatePath)
+    const { 
+      templatePath: templateDirPath, 
+      templateJsonPath 
+    } = await installTemplate(projectName, templatePath)
     console.log('templateDirPath is ', templateDirPath)
 
     const privateDependencies = 'privateDependencies'
