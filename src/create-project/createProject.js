@@ -105,7 +105,7 @@ function addCustomizeCra(projectPackage) {
 
     // package react-app-rewired ^1.0.8
     if (!projectPackage.devDependencies) { projectPackage.devDependencies = {} }
-    projectPackage.devDependencies["react-app-rewired"] = "^1.0.8"
+    projectPackage.devDependencies["react-app-rewired"] = "2.1.6"
 }
 
 function getTemplateInstallPackage(template) {
