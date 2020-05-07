@@ -80,11 +80,32 @@ async function installProject({ projectName, templatePath, useNpm, usePnp  }) {
     // 因为package.json中的一些字段有黑名单，所以想要生成这些字段要后期处理
     if (package[tmpDevDependencies] && typeof package[tmpDevDependencies] === 'object' && !Array.isArray(package[tmpDevDependencies])) {
         projectPackage[devDependencies] = package[tmpDevDependencies] || {}
+
+        // add mcf-cra
         projectPackage[devDependencies][cratPackage.name] = cratVersion
+
+        // add customize-cra
+        addCustomizeCra(projectPackage)
+
+        // delete
         delete projectPackage[tmpDevDependencies]
     }
 
     fs.writeFileSync(projectPackagePath, JSON.stringify(projectPackage, null, 2), 'utf8')
+}
+
+function addCustomizeCra(projectPackage) {
+    // fix scripts
+    if (!projectPackage.scripts) { projectPackage.scripts = {} }
+    projectPackage.scripts.start = "react-app-rewired start"
+    projectPackage.scripts.build = "react-app-rewired build"
+    projectPackage.scripts.test = "react-app-rewired test"
+    projectPackage.scripts["build:cjs"] = "MODE=cjs react-app-rewired build"
+    projectPackage.scripts["build:umd"] = "MODE=umd react-app-rewired build"
+
+    // package react-app-rewired ^1.0.8
+    if (!projectPackage.devDependencies) { projectPackage.devDependencies = {} }
+    projectPackage.devDependencies["react-app-rewired"] = "^1.0.8"
 }
 
 function getTemplateInstallPackage(template) {
@@ -253,7 +274,6 @@ async function install(root, dependencies) {
     // if (true) {
     //   args.push('--verbose');
     // }
-    console.log('install template: ', command, args)
     const child = spawn(command, args, { stdio: 'inherit' });
     child.on('close', code => {
       if (code !== 0) {
