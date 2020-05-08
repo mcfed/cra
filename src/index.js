@@ -8,7 +8,7 @@ const {
     addWebpackAlias,
 } = customizeCra
 
-customizeCra.prodDefaultConfig = () => config => {
+const prodDefaultConfig = () => config => {
     const modes = {
         cjs: 'cjs',
         umd: 'umd'
@@ -45,9 +45,11 @@ customizeCra.prodDefaultConfig = () => config => {
     return config
 }
 
-customizeCra.devDefaultConfig = () => config => {
+customizeCra.defaultConfig = () => config => {
     const isDev = process.env.NODE_ENV === 'development'
-    if (!isDev) { return config }
+    if (!isDev) {
+      return prodDefaultConfig()(config)
+    }
     const app = path.join(paths.appPath, 'app.js')
     const appIndex = path.join(paths.appPath, 'index.js')
     
