@@ -4,7 +4,8 @@ const paths = require('react-scripts/config/paths')
 
 const {
     disableChunk,
-    adjustStyleLoaders
+    adjustStyleLoaders,
+    addWebpackExternals
 } = customizeCra
 
 customizeCra.customBuildConfig = () => config => {
