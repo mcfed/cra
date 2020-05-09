@@ -74,8 +74,8 @@ customizeCra.customEntryConfig = () => config => {
     if (!isDev) {
       return config
     }
-    const app = path.join(paths.appPath, 'app.js')
-    const appIndex = path.join(paths.appPath, 'index.js')
+    const app = path.join(paths.appPath, 'app')
+    const appIndex = path.join(paths.appPath, 'index')
   
     // 增加入口文件
     config.entry.push(appIndex)
