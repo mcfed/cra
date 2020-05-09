@@ -4,11 +4,10 @@ const paths = require('react-scripts/config/paths')
 
 const {
     disableChunk,
-    adjustStyleLoaders,
-    addWebpackAlias,
+    adjustStyleLoaders
 } = customizeCra
 
-const prodDefaultConfig = () => config => {
+customizeCra.customBuildConfig = () => config => {
     const modes = {
         cjs: 'cjs',
         umd: 'umd'
@@ -41,23 +40,41 @@ const prodDefaultConfig = () => config => {
         loader.use = loader.use.filter(it => it.loader.indexOf('mini-css-extract-plugin') === -1)
     })(config)
     disableChunk()(config)
+    addWebpackExternals([ 
+      '@mcf/components',
+      '@mcf/core',
+      '@mcf/crud',
+      '@mcf/utils',
+      'antd',
+      'history',
+      'lodash',
+      'mcf-components',
+      'mcf-crud',
+      'mcf-module',
+      'mcf-utils',
+      'moment',
+      'react',
+      'react-dom',
+      'react-intl',
+      'react-redux',
+      'react-router',
+      'react-router-dom',
+      'redux',
+      'redux-logger',
+      'redux-saga',
+      'serviceWorker' 
+    ])
     
     return config
 }
 
-customizeCra.defaultConfig = () => config => {
+customizeCra.customEntryConfig = () => config => {
     const isDev = process.env.NODE_ENV === 'development'
     if (!isDev) {
-      return prodDefaultConfig()(config)
+      return config
     }
     const app = path.join(paths.appPath, 'app.js')
     const appIndex = path.join(paths.appPath, 'index.js')
-    
-    // 加别名
-    addWebpackAlias({
-      'react-intl': path.join(paths.appNodeModules, 'react-intl'),
-      'mcf-module': path.join(paths.appNodeModules, 'mcf-module')
-    })(config)
   
     // 增加入口文件
     config.entry.push(appIndex)
