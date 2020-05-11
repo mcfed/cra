@@ -41,30 +41,33 @@ customizeCra.customBuildConfig = () => config => {
         loader.use = loader.use.filter(it => it.loader.indexOf('mini-css-extract-plugin') === -1)
     })(config)
     disableChunk()(config)
-    addWebpackExternals([ 
-      '@mcf/components',
-      '@mcf/core',
-      '@mcf/crud',
-      '@mcf/utils',
-      'antd',
-      'history',
-      'lodash',
-      'mcf-components',
-      'mcf-crud',
-      'mcf-module',
-      'mcf-utils',
-      'moment',
-      'react',
-      'react-dom',
-      'react-intl',
-      'react-redux',
-      'react-router',
-      'react-router-dom',
-      'redux',
-      'redux-logger',
-      'redux-saga',
-      'serviceWorker' 
-    ])
+    if (mode === modes.cjs) {
+      addWebpackExternals([ 
+        '@mcf/components',
+        '@mcf/core',
+        '@mcf/crud',
+        '@mcf/utils',
+        'antd',
+        'history',
+        'lodash',
+        'mcf-components',
+        'mcf-crud',
+        'mcf-module',
+        'mcf-utils',
+        'moment',
+        'react',
+        'react-dom',
+        'react-intl',
+        'react-redux',
+        'react-router',
+        'react-router-config',
+        'react-router-dom',
+        'redux',
+        'redux-logger',
+        'redux-saga',
+        'serviceWorker' 
+      ])(config)
+    }
     
     return config
 }
