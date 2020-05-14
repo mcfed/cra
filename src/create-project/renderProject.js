@@ -69,7 +69,7 @@ async function getFileByNameUseDefaultStrategy(fileName) {
 
   // 当前命令运行目录下的
   let reuslt = await checkFileExistReturn(
-    path.join(PWD, `./${fileName}`)
+    path.join(Pwd, `./${fileName}`)
   );
   if (reuslt) {
     return reuslt
