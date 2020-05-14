@@ -10,10 +10,13 @@ const unpack = require('tar-pack').unpack;
 const spawn = require('cross-spawn');
 const cratPackage = require('../../package.json')
 const HomePath = process.env.HOME
-const Pwd = process.env.PWD
+let Pwd = process.env.PWD
 const templateJson = 'template.json'
 const cratVersion = cratPackage.version
 const creatReactAppCommandPath = path.join(__dirname, '../../node_modules/.bin/create-react-app')
+if (!Pwd) {
+  Pwd = process.cwd()
+}
 
 function checkVision() {
     // if (!shell.which('create-react-app')) {

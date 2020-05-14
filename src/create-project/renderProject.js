@@ -5,8 +5,10 @@ const inquirer = require('inquirer');
 const chalk = require('chalk');
 const prompt = inquirer.createPromptModule();
 const HomePath = process.env.HOME
-const Pwd = process.env.PWD
-
+let Pwd = process.env.PWD
+if (!Pwd) {
+  Pwd = process.cwd()
+}
 // try {
 //     main()
 // } catch(err) {
@@ -67,7 +69,7 @@ async function getFileByNameUseDefaultStrategy(fileName) {
 
   // 当前命令运行目录下的
   let reuslt = await checkFileExistReturn(
-    path.join(process.env.PWD, `./${fileName}`)
+    path.join(PWD, `./${fileName}`)
   );
   if (reuslt) {
     return reuslt

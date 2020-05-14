@@ -4,7 +4,10 @@ const chalk = require('chalk');
 const { checkVision, createProject, installProject, rmProject } = require('./createProject')
 const renderProject = require('./renderProject.js')
 var prompt = inquirer.createPromptModule();
-const Pwd = process.env.PWD
+let Pwd = process.env.PWD
+if (!Pwd) {
+    Pwd = process.cwd()
+}
 
 let q = {
     "questions": [
