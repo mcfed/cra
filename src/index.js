@@ -77,36 +77,35 @@ customizeCra.customEntryConfig = () => config => {
     if (!isDev) {
       return config
     }
-    const app = path.join(paths.appPath, 'app')
-    const appIndex = path.join(paths.appPath, 'index')
+    const appIndex = path.join(paths.appSrc, 'app')
   
     // 增加入口文件
     config.entry.push(appIndex)
   
-    // 修改babel-loader的include
-    if (!config.module) {
-      config.module = {}
-    }
-    if (!config.module.rules || !config.module.rules.length) {
-      config.module.rules = []
-    }
-    for (const item of (config.module.rules.find(rule => Array.isArray(rule.oneOf)).oneOf || [])) {
-      if (item.loader && 
-          item.loader.indexOf('babel-loader') !== -1 && 
-          item.options &&
-          item.options.customize &&
-          item.options.customize.indexOf('babel-preset-react-app') !== -1
-        ) {
-          if (!item.include) {
-            item.include = []
-          }
-          if (!Array.isArray(item.include)) {
-            item.include = [item.include]
-          }
-          item.include.push(app)
-          item.include.push(appIndex)
-      }
-    }
+    // // 修改babel-loader的include
+    // if (!config.module) {
+    //   config.module = {}
+    // }
+    // if (!config.module.rules || !config.module.rules.length) {
+    //   config.module.rules = []
+    // }
+    // for (const item of (config.module.rules.find(rule => Array.isArray(rule.oneOf)).oneOf || [])) {
+    //   if (item.loader && 
+    //       item.loader.indexOf('babel-loader') !== -1 && 
+    //       item.options &&
+    //       item.options.customize &&
+    //       item.options.customize.indexOf('babel-preset-react-app') !== -1
+    //     ) {
+    //       if (!item.include) {
+    //         item.include = []
+    //       }
+    //       if (!Array.isArray(item.include)) {
+    //         item.include = [item.include]
+    //       }
+    //       item.include.push(app)
+    //       item.include.push(appIndex)
+    //   }
+    // }
     
     return config
 }

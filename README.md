@@ -1,6 +1,6 @@
 # crat
 
-全局安装 `crat`
+全局安装 `@mcf/cra`
 
 ```js
  npm install crat -g
@@ -15,5 +15,5 @@ npm install create-react-app
 运行crat
 
 ```js
-crat
+@mcf/cra
 ```
