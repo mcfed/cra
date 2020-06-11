@@ -110,4 +110,25 @@ customizeCra.customEntryConfig = () => config => {
     return config
 }
 
+customizeCra.customkeepFunctionNameConfig = () => config => {
+    if (!config.optimization || !config.optimization.minimizer) {
+      console.error('请启用customkeepFunctionNameConfig的前置配置optimization')
+      process.exit(1)
+    }
+    if (!Array.isArray(config.optimization.minimizer)) {
+        config.optimization.minimizer = [config.optimization.minimizer]
+    }
+    for (const item of config.optimization.minimizer) {
+      if (item.constructor && item.constructor.name && item.constructor.name === 'TerserPlugin') {
+        if (!item.options || !item.options.terserOptions || !item.options.terserOptions) {
+          console.error('请启用customkeepFunctionNameConfig的前置配置TerserPlugin')
+          process.exit(1)
+        }
+        item.options.terserOptions.keep_classnames = true
+        item.options.terserOptions.keep_fnames = true
+      }
+    }
+    return config
+}
+
 module.exports = customizeCra

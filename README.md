@@ -15,5 +15,5 @@ npm install create-react-app
 运行crat
 
 ```js
-@mcf/cra
+mcfcra
 ```
