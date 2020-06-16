@@ -110,7 +110,7 @@ customizeCra.customEntryConfig = () => config => {
     return config
 }
 
-customizeCra.customkeepFunctionNameConfig = () => config => {
+customizeCra.customKeepFunctionNameConfig = () => config => {
     if (!config.optimization || !config.optimization.minimizer) {
       console.error('请启用customkeepFunctionNameConfig的前置配置optimization')
       process.exit(1)
