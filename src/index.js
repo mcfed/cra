@@ -171,5 +171,11 @@ customizeCra.customBabelLoaderInclude = (includePathArray=[]) => config => {
   
   return config
 }
+customizeCra.customProxyConfig = (proxy) => config => {
+  return {
+    ...config,
+    proxy
+  }
+}
 
 module.exports = customizeCra
