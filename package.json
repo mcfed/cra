@@ -1,6 +1,6 @@
 {
   "name": "@mcfed/cra",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -40,5 +40,6 @@
   },
   "optionalDependencies": {
     "crat-template": "^0.0.1"
-  }
+  },
+  "devDependencies": {}
 }

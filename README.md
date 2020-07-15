@@ -17,3 +17,7 @@ npm install create-react-app
 ```js
 mcfcra
 ```
+
+## 版本号说明
+
+v0.2.0 新增渲染模版功能
