@@ -8,7 +8,7 @@ module.exports = function main(moudleName, templateDir, newRenderProjectDir) {
         }
 
         if (!templateDir) {
-            templateDir = path.resolve(process.cwd(), 'packages/demo')
+            templateDir = path.resolve(process.cwd(), 'template')
         }
 
         if (!newRenderProjectDir) {
