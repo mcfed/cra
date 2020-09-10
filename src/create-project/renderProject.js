@@ -15,7 +15,7 @@ if (!Pwd) {
 //     console.error('渲染项目失败:', error)
 // }
 
-module.exports = function main(renderProjectDir) {
+module.exports = function main(renderProjectDir, moudleName) {
     return new Promise(async (resolve, reject) => {
         // let q = {
         //     "questions": [
@@ -35,7 +35,7 @@ module.exports = function main(renderProjectDir) {
         //     res.renderProjectDir = path.join(Pwd, res.renderProjectDir)
         // }
         try {
-            await creatModal(renderProjectDir)
+            await creatModal(renderProjectDir, moudleName)
             resolve()
         } catch (err) {
             reject(err)
@@ -43,7 +43,7 @@ module.exports = function main(renderProjectDir) {
     })
 }
 
-async function creatModal(projectPath) {
+async function creatModal(projectPath, moudleName) {
   const crarc = await getFileByNameUseDefaultStrategy('.crarc')
   if (!crarc) {
     console.error('请配置model模版 crarc')
@@ -56,6 +56,9 @@ async function creatModal(projectPath) {
   console.log('.crarc path is ', crarc.path)
 
   let tpl = require(crarc.path)
+  if (moudleName) {
+    tpl.namespace = moudleName
+  }
   // console.log('replace files ...', JSON.stringify(tpl, 0, 2))
   await allRead(projectPath, tpl)
   console.log(chalk.green(`模块${tpl.namespace}创建成功`), projectPath)
