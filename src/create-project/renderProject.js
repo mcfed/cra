@@ -115,7 +115,7 @@ async function allRead(filePath, tpl) {
     const result = await fs.readdirSync(filePath)
     for (const fileName of result) {
       var filedir = path.join(filePath, fileName)
-      if (/node_modules|.git|.jpg$|.png$/.test(filedir)) {
+      if (/node_modules|\.git$|\.jpg$|\.png$/.test(filedir)) {
         continue
       }
       var stats = fs.statSync(filedir)
