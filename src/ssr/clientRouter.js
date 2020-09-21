@@ -6,6 +6,7 @@ const { matchPath } = require('react-router-dom');
 const Mustache = require('mustache');
 const ssrServerConfig = require('./ssrServerConfig.js')
 const { matchRoutes } = require('react-router-config');
+const render = require('../render-template/render');
 
 // 全局变量声明
 global.ssrServer = true
@@ -39,13 +40,10 @@ const getMatch=(routesArray, url)=>{
 }
 
 const makeup = async (ctx,ssrStore,App,html)=>{
-  let customTags = ['{@', '@}']
-  const rootString =  renderToString(React.createElement(App))
-  console.log('===rootString==', rootString)
-  return Mustache.render(html, {
-    rootString,
+  return render(html, {
+    rootString: renderToString(React.createElement(App)),
     initState: JSON.stringify(ssrStore.getState())
-  }, {}, customTags);
+  })
 }
 
 const clientRouter=async(ctx, next) => {

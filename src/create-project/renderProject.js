@@ -1,39 +1,13 @@
 const fs = require('fs-extra');
 const path = require('path');
 const Mustache = require('mustache');
-const inquirer = require('inquirer');
 const chalk = require('chalk');
-const prompt = inquirer.createPromptModule();
-const HomePath = process.env.HOME
 let Pwd = process.env.PWD
 if (!Pwd) {
   Pwd = process.cwd()
 }
-// try {
-//     main()
-// } catch(err) {
-//     console.error('渲染项目失败:', error)
-// }
-
 module.exports = function main(renderProjectDir) {
     return new Promise(async (resolve, reject) => {
-        // let q = {
-        //     "questions": [
-        //         {
-        //             "type": "input",
-        //             "name": "renderProjectDir",
-        //             "message": "请输入渲染项目的路径",
-        //             "default": "当前目录"
-        //         }
-        //     ]
-        // }
-        // const res = await prompt(q.questions)
-
-        // if (res.renderProjectDir === '当前目录') {
-        //     res.renderProjectDir = Pwd
-        // } else if (res.renderProjectDir.indexOf('/') === -1) {
-        //     res.renderProjectDir = path.join(Pwd, res.renderProjectDir)
-        // }
         try {
             await creatModal(renderProjectDir)
             resolve()
@@ -56,7 +30,6 @@ async function creatModal(projectPath) {
   console.log('.crarc path is ', crarc.path)
 
   let tpl = require(crarc.path)
-  // console.log('replace files ...', JSON.stringify(tpl, 0, 2))
   await allRead(projectPath, tpl)
   console.log(chalk.green(`模块${tpl.namespace}创建成功`), projectPath)
 }
@@ -100,22 +73,13 @@ async function getFileByNameUseDefaultStrategy(fileName) {
   }
 }
 
-// 复制文件夹
-async function copyDir(oldPath, newPath) {
-  try {
-    await fs.copy(oldPath, newPath)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 // 模版替换函数
 async function allRead(filePath, tpl) {
   try {
     const result = await fs.readdirSync(filePath)
     for (const fileName of result) {
       var filedir = path.join(filePath, fileName)
-      if (/node_modules|.git|.jpg$|.png$/.test(filedir)) {
+      if (/node_modules|\.git|\.jpg$|\.png$/.test(filedir)) {
         continue
       }
       var stats = fs.statSync(filedir)

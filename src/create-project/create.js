@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const { checkVision, createProject, installProject, rmProject } = require('./createProject')
 const renderProject = require('./renderProject.js')
 var prompt = inquirer.createPromptModule();
+const { config } = require('../config')
 let Pwd = process.env.PWD
 if (!Pwd) {
     Pwd = process.cwd()
@@ -50,6 +51,10 @@ function main(questions) {
 
         // 交互
         const res = await prompt(questions)
+
+        // mergeConfig
+        config.merge(res)
+
         console.log(chalk.green(`开始创建项目: ${res.projectName}, ${res.templatePath}`))
         const time = Date.now()
         try {

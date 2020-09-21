@@ -22,7 +22,7 @@ program
     }  else if (commander.apply) {
       require('../src/gitdiff-wikis/lib/apply')
     } else if (commander.ssrServer) {
-      require('../src/server')
+      require('../src/ssr')
     } else if (commander.renderProject) {
       try {
         require('../src/renderTemplate')(commander.renderProject, commander.args[0], commander.args[1])
