@@ -1,5 +1,6 @@
  const cm = require("./customize-cra")
 
- cm.render = require('./render-template/render')
+ cm.renderTemplate = require('./render-template/index')
+ cm.renderFile = require('./render-template/render')
 
  module.exports = cm

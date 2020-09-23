@@ -1,62 +1,70 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-let Pwd = process.env.PWD
-if (!Pwd) {
-  Pwd = process.cwd()
-}
-
 class Config {
   constructor() {
-    this.config = {}
+    this.config = {
+      pwd: process.env.PWD || process.cwd() || '',
+      home: process.env.HOME || process.env.HOMEPATH || ''
+    }
     this.configPath = ''
-    this.init()
-  }
-  init() {
-    this.getConfigPath('.crarc')
-    if (!this.configPath) { return null }
-
-    this.config = require(this.configPath)
-  }
-  set(key, value) {
-    this.config[key] = value
+    this.configFileName = '.crarc'
+    this.getByFile()
   }
   get(key) {
     return this.config[key]
   }
-  getConfigPath(fileName) {
+  set(key, value) {
+    this.config[key] = value
+  }
+  getByFile() {
+    this.getConifgPath(this.configFileName)
+    if (!this.configPath) { return null }
+
+    this.merge(require(this.configPath))
+  }
+  merge(config) {
+    if (!config || typeof config !== 'object') return null;
+
+    Object.assign(this.config, config)
+  }
+  defaultValue(config) {
+    if (!config || typeof config !== 'object') return null;
+
+    Object.keys(config).map(key => {
+      const value = config[key]
+      if (!this.get(key)) {
+        this.set(key, value)
+      }
+    })
+  }
+  getConifgPath(fileName) {
       if (!fileName) { return null }
       
       // 当前命令运行目录下的
-      this.checkFileExistReturn(
-        path.join(Pwd, `./${fileName}`)
+      this.checkFileExist(
+        path.resolve(this.config.pwd, `./${fileName}`)
       );
       
       // 全局默认路径
-      this.checkFileExistReturn(
-          path.join(process.env.HOME || process.env.HOMEPATH, fileName)
+      this.checkFileExist(
+          path.resolve(this.config.home, fileName)
       );
       
       // 包中默认模版
-      this.checkFileExistReturn(
-        path.join(__dirname, `../${fileName}`)
+      this.checkFileExist(
+        path.resolve(__dirname, `../${fileName}`)
       );  
   }
-  checkFileExistReturn(path) {
-      if (path && typeof path !== 'string') {
-        this.configPath = path 
-      }
+  checkFileExist(path) {
+      if (this.configPath) { return }
+      
       if (path && fs.existsSync(path)) {
         this.configPath = path
       }
-      this.configPath = null
-  }
-  merge(config) {
-    if (!config) return null;
-    Object.assign(this.config, config)
+      this.configPath = ''
   }
 }
 
-exports.Config = Config
-exports.config = new Config()
+module.exports = new Config()
 

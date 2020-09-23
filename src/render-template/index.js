@@ -3,29 +3,23 @@ const path = require('path');
 const configObject = require('../config');
 const render = require('./render');
 
-const config = configObject.config;
-
-module.exports = function main() {
+module.exports = function renderTemplate(config) {
     try {
-        if (!config.namespace) {
-            config.set('namespace', 'demoTemplate')
-        }
+        configObject.merge(config)
 
-        if (!config.templateDir) {
-            config.set('templateDir', path.resolve(process.cwd(), 'template'))
-        }
+        configObject.defaultValue({
+            namespace: 'demoTemplate',
+            templateDir: path.resolve(configObject.get('pwd'), 'template'),
+            newRenderProjectDir: path.resolve(configObject.get('pwd'), `packages/${configObject.namespace}`)
+        })
 
-        if (!config.newRenderProjectDir) {
-            config.set('newRenderProjectDir', path.resolve(process.cwd(), `packages/${config.namespace}`)) 
+        if (!fs.existsSync(configObject.newRenderProjectDir)) {
+            fs.mkdirpSync(configObject.newRenderProjectDir)
         }
-
-        if (!fs.existsSync(config.newRenderProjectDir)) {
-            fs.mkdirpSync(config.newRenderProjectDir)
-        }
-        fs.copySync(config.get('templateDir'), config.get('newRenderProjectDir'))
+        fs.copySync(configObject.get('templateDir'), configObject.get('newRenderProjectDir'))
 
         // 渲染
-        renderDirs(config.get('newRenderProjectDir'))
+        renderDirs(configObject.get('newRenderProjectDir'))
     } catch (err) {
         throw new Error('渲染模版错误：', err.message)
     }
@@ -47,7 +41,7 @@ const renderDirs = (dir) => {
                 fs.readFileSync(filePath, 'utf-8')))
       }
       if (isDir) {
-        renderDirs(filePath, tpl)
+        renderDirs(filePath)
       }
     }
 }
