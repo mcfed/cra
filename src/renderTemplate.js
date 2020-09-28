@@ -21,7 +21,7 @@ module.exports = function main(moudleName, templateDir, newRenderProjectDir) {
         fs.copySync(templateDir, newRenderProjectDir)
 
         // 渲染
-        require('./create-project/renderProject')(newRenderProjectDir)
+        require('./create-project/renderProject')(newRenderProjectDir, moudleName)
     } catch (err) {
         throw new Error('渲染模版错误：', err.message)
     }

@@ -6,10 +6,10 @@ let Pwd = process.env.PWD
 if (!Pwd) {
   Pwd = process.cwd()
 }
-module.exports = function main(renderProjectDir) {
+module.exports = function main(renderProjectDir, moudleName) {
     return new Promise(async (resolve, reject) => {
         try {
-            await creatModal(renderProjectDir)
+            await creatModal(renderProjectDir, moudleName)
             resolve()
         } catch (err) {
             reject(err)
@@ -17,7 +17,7 @@ module.exports = function main(renderProjectDir) {
     })
 }
 
-async function creatModal(projectPath) {
+async function creatModal(projectPath, moudleName) {
   const crarc = await getFileByNameUseDefaultStrategy('.crarc')
   if (!crarc) {
     console.error('请配置model模版 crarc')
@@ -30,6 +30,9 @@ async function creatModal(projectPath) {
   console.log('.crarc path is ', crarc.path)
 
   let tpl = require(crarc.path)
+  if (moudleName) {
+    tpl.namespace = moudleName
+  }
   await allRead(projectPath, tpl)
   console.log(chalk.green(`模块${tpl.namespace}创建成功`), projectPath)
 }

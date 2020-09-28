@@ -2,7 +2,8 @@
 
 const program = require('commander')
 const package = require('../package.json')
-const { config } = require('../src/config')
+const configObject = require('../src/config')
+const renderTemplate = require('../src/render-template')
 
 program
   .version(package.version)
@@ -22,16 +23,12 @@ program
   .option('-t --template-dir <templateDir>', '模版路径')
   .option('-n --new-render-project-dir <newRenderProjectDir>', '新生成的模版路径')  
   .action((commander) => {
-      if (commander.renderProject) {
-        config.set('namespace', commander.renderProject)
-      }
-      if (commander.templateDir) {
-        config.set('templateDir', commander.templateDir)
-      }
-      if (commander.newRenderProjectDir) {
-        config.set('newRenderProjectDir', commander.newRenderProjectDir)
-      }
-      require('../src/render-template')()
+      configObject.merge({
+        namespace: commander.renderProject || '',
+        templateDir: commander.templateDir || '',
+        newRenderProjectDir: commander.newRenderProjectDir || ''
+      })
+      renderTemplate()
   })
 
 program
@@ -40,12 +37,10 @@ program
   .option('-n --project-name <projectName>', '项目名称', _=>_, 'projectname')
   .option('-t --template-path <templatePath>', '渲染项目名称', _=>_, 'cra-template-crat')
   .action(() => {
-    if (commander.projectName) {
-      config.set('projectName', commander.projectName)
-    }
-    if (commander.templatePath) {
-      config.set('templatePath', commander.templatePath)
-    }
+    configObject.merge({
+      projectName: commander.projectName,
+      templatePath: commander.templatePath
+    })
     require('../src/create-project/create')
   })
 
