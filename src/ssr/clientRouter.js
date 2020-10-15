@@ -3,7 +3,6 @@ const fs = require('fs');
 const React = require('react');
 const {renderToString} = require('react-dom/server');
 const { matchPath } = require('react-router-dom');
-const Mustache = require('mustache');
 const ssrServerConfig = require('./ssrServerConfig.js')
 const { matchRoutes } = require('react-router-config');
 const render = require('../render-template/render');

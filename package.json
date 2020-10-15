@@ -23,6 +23,9 @@
   "author": "lixiang",
   "license": "ISC",
   "dependencies": {
+    "@mcfed/cra-custom": "^0.0.1",
+    "@mcfed/cra-render": "^0.0.1",
+    "@mcfed/cra-ssr": "^0.0.1",
     "chalk": "^4.0.0",
     "commander": "^4.1.0",
     "compare-versions": "^3.5.1",
@@ -59,7 +62,8 @@
     "crat-template": "^0.0.1"
   },
   "devDependencies": {
-    "nodemon": "1.12.5"
+    "nodemon": "1.12.5",
+    "ts-node-dev": "^1.0.0-pre.63"
   },
   "ssrServerConfig": {
     "package": "testssr",

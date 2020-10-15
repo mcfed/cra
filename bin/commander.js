@@ -3,7 +3,8 @@
 const program = require('commander')
 const package = require('../package.json')
 const configObject = require('../src/config')
-const renderTemplate = require('../src/render-template')
+const craRender = require('@mcfed/cra-render')
+const craSsr = require('@mcfed/cra-ssr')
 
 program
   .version(package.version)
@@ -23,12 +24,11 @@ program
   .option('-t --template-dir <templateDir>', '模版路径')
   .option('-n --new-render-project-dir <newRenderProjectDir>', '新生成的模版路径')  
   .action((commander) => {
-      configObject.merge({
+      craRender.renderTemplate({
         namespace: commander.renderProject || '',
         templateDir: commander.templateDir || '',
         newRenderProjectDir: commander.newRenderProjectDir || ''
       })
-      renderTemplate()
   })
 
 program
@@ -36,19 +36,20 @@ program
   .description('创建模版项目')
   .option('-n --project-name <projectName>', '项目名称', _=>_, 'projectname')
   .option('-t --template-path <templatePath>', '渲染项目名称', _=>_, 'cra-template-crat')
-  .action(() => {
-    configObject.merge({
-      projectName: commander.projectName,
-      templatePath: commander.templatePath
-    })
+  .action((commander) => {
+    configObject.merge(commander)
     require('../src/create-project/create')
   })
 
 program
   .command('ssr [options]')
   .description('启动ssr server')
-  .action(() => {
-    require('../src/ssr')
+  .option('-p --package-name <packageName>', '目标服务包名')
+  .option('-b --build-path <buildPath>', '目标服务包构建路径', 'dist')
+  .option('-p --index-path <indexPath>', '目标服务包名构建目录文件名称', 'index.html')
+  .action((commander) => {
+    craSsr.config.merge(commander)
+    craSsr.startServer()
   })
 
 program.parse(process.argv);
