@@ -51,3 +51,7 @@ mcfcra
 
 1. `ssrServer`  `Boolean` 类型，启动服务初始化为 `true`
 2. `ssrServerRoute`  `String`  类型， 当前的 `SSR Server` 服务的请求路由
+
+## v0.2.3
+
+1. 仅保留 模版渲染和custom-cra导出 功能，其他功能移除
