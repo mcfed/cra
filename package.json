@@ -17,7 +17,7 @@
   "author": "lixiang",
   "license": "ISC",
   "dependencies": {
-    "@mcfed/cra-custom": "^0.0.1",
+    "@mcfed/cra-custom": "^0.0.2",
     "@mcfed/cra-render": "^0.0.3"
   },
   "bin": {

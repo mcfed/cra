@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander')
+var craRender = require('@mcfed/cra-render')
 
 const package = require('../package.json')
 
@@ -10,7 +11,11 @@ program
   .action(async function (commander) {
     if (commander.renderProject) {
       try {
-        require('../src/renderTemplate')(commander.renderProject, commander.args[0], commander.args[1])
+        craRender.renderTemplate({
+          namespace: commander.renderProject || '',
+          templateDir: commander.templateDir || '',
+          newRenderProjectDir: commander.newRenderProjectDir || ''
+        })
       } catch (error) {
         console.error(error.stack)
       }
