@@ -1348,15 +1348,13 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@mcfed/cra-custom@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.npmjs.org/@mcfed/cra-custom/-/cra-custom-0.0.2.tgz#c1d5c09085897e8ac240b67821b5d77b4a61c464"
-  integrity sha512-sO0hqvdjz6+ukJHq4wDHT6KRNjpNm813wp9IiogqqARRXsAC5FFMAiJSR1fjtk7Oq6TE9oloS7UYjsLmSRZcGw==
+"@mcfed/cra-custom@^0.0.5":
+  version "0.0.5"
+  resolved "http://nexus.mchz.com.cn:4873/@mcfed%2fcra-custom/-/cra-custom-0.0.5.tgz#699c74d8fb93814468c20a28e3e79d971d035b91"
+  integrity sha512-ZbK/tHDZRngqx9RB8Acmqq1n+jcQpODfutUieeSSY2xsJ6N8pZsxZZ6wRlzuo2a5/iFnFVoP1E/bQl62PoKvBg==
   dependencies:
-    commander "^6.1.0"
     customize-cra "^1.0.0"
     react-scripts "^3.4.3"
-    typescript "^4.0.3"
 
 "@mcfed/cra-render@^0.0.3":
   version "0.0.3"
